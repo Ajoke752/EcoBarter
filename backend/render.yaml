@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ecobarter-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://ajokeabdulrasaq2_db_user:Ecobarter123@hackathon3.k3r8w18.mongodb.net/EcobarterDb?retryWrites=true&w=majority&appName=Hackathon3
+      - key: PORT
+        value: 10000
