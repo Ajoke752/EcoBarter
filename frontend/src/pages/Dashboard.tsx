@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, LogOut } from "lucide-react";
@@ -23,7 +23,7 @@ const Dashboard = () => {
 
     const fetchUserProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/profile", {
+        const res = await api.get(`/auth/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

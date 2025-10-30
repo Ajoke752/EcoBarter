@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import api from "@/lib/api";
 import {
   Card,
   CardContent,
@@ -37,9 +38,7 @@ const WasteHistoryList = ({ userId }: WasteHistoryListProps) => {
   const fetchReports = async () => {
     try {
       // use the correct plural 'farmers' path and normalize snake_case -> camelCase
-      const res = await axios.get(
-        `http://localhost:5000/api/farmers/waste-reports/${userId}`
-      );
+      const res = await api.get(`/farmers/waste-reports/${userId}`);
       const data = (res.data || []).map((r: any) => ({
         _id: r._id,
         wasteType: r.waste_type,

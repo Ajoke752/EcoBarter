@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import api from "@/lib/api";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Leaf, Package, Clock } from "lucide-react";
 import WasteReportForm from "./WasteReportForm";
@@ -31,10 +38,11 @@ const FarmerDashboard = ({ userId }: FarmerDashboardProps) => {
   // Fetch farmer stats from MongoDB backend
   const fetchStats = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/farmers/stats/${userId}`);
-      const data = await response.json();
+      const res = await api.get(`/farmers/stats/${userId}`);
+      const data = res.data;
 
-      if (!response.ok) throw new Error(data.message || "Failed to load stats");
+      if (res.status < 200 || res.status >= 300)
+        throw new Error(data.message || "Failed to load stats");
 
       setStats({
         treeSeedlings: data.treeSeedlings || 0,
@@ -69,7 +77,9 @@ const FarmerDashboard = ({ userId }: FarmerDashboardProps) => {
             <CardDescription>Total earned through recycling</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold text-green-700">{stats.treeSeedlings}</div>
+            <div className="text-4xl font-bold text-green-700">
+              {stats.treeSeedlings}
+            </div>
           </CardContent>
         </Card>
 
@@ -82,7 +92,9 @@ const FarmerDashboard = ({ userId }: FarmerDashboardProps) => {
             <CardDescription>Redeemable compost reward</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold text-amber-700">{stats.compostCredits}</div>
+            <div className="text-4xl font-bold text-amber-700">
+              {stats.compostCredits}
+            </div>
           </CardContent>
         </Card>
 
@@ -95,7 +107,9 @@ const FarmerDashboard = ({ userId }: FarmerDashboardProps) => {
             <CardDescription>Awaiting collection</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold text-blue-700">{stats.pendingReports}</div>
+            <div className="text-4xl font-bold text-blue-700">
+              {stats.pendingReports}
+            </div>
           </CardContent>
         </Card>
       </div>

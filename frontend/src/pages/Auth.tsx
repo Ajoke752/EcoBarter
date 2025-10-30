@@ -19,9 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Leaf, Loader2 } from "lucide-react";
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // backend base URL
+import api from "@/lib/api";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -36,12 +34,10 @@ const Auth = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch(`${API_URL}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data?.user) navigate("/dashboard");
+      api
+        .get(`/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => {
+          if (res.data?.user) navigate("/dashboard");
         })
         .catch(() => localStorage.removeItem("token"));
     }
@@ -57,13 +53,9 @@ const Auth = () => {
         ? { email, password }
         : { fullName, email, password, role };
 
-      const response = await axios.post(
-        `${API_URL}/api/auth/${endpoint}`,
-        payload
-      );
+      const response = await api.post(`/auth/${endpoint}`, payload);
       const data = response.data;
 
-      // axios responses don't have `ok`; check HTTP status instead
       if (response.status < 200 || response.status >= 300)
         throw new Error(data.message || "Authentication failed");
 

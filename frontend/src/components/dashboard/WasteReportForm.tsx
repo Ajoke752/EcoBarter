@@ -19,6 +19,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Mic, Send, Loader2 } from "lucide-react";
+import api from "@/lib/api";
 
 interface WasteReportFormProps {
   userId: string;
@@ -57,24 +58,18 @@ const WasteReportForm = ({ userId, onReportCreated }: WasteReportFormProps) => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/waste-reports", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          farmer_id: userId,
-          waste_type: wasteType,
-          quantity: parseInt(quantity),
-          description,
-          location,
-          status: "pending",
-        }),
+      const res = await api.post(`/waste-reports`, {
+        farmer_id: userId,
+        waste_type: wasteType,
+        quantity: parseInt(quantity),
+        description,
+        location,
+        status: "pending",
       });
 
-      const data = await response.json();
+      const data = res.data;
 
-      if (!response.ok) {
+      if (res.status < 200 || res.status >= 300) {
         throw new Error(data.message || "Failed to submit report");
       }
 
