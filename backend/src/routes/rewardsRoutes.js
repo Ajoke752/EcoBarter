@@ -1,9 +1,19 @@
 import express from "express";
-import { getRewards, addReward } from "../controllers/rewardsController.js";
+import {
+  calculateRewards,
+  redeemReward,
+  getRewardHistory,
+} from "../controllers/rewardsController.js";
 
 const router = express.Router();
 
-router.get("/", getRewards);
-router.post("/", addReward);
+// Calculate reward points
+router.get("/calculate/:farmerId", calculateRewards);
+
+// Redeem reward
+router.post("/redeem", redeemReward);
+
+// Get reward history
+router.get("/history/:farmerId", getRewardHistory);
 
 export default router;
