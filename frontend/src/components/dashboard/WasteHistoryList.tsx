@@ -39,7 +39,7 @@ const WasteHistoryList = ({ userId }: WasteHistoryListProps) => {
     try {
       // use the correct plural 'farmers' path and normalize snake_case -> camelCase
       const res = await api.get(`/farmers/waste-reports/${userId}`);
-      const data = (res.data || []).map((r: any) => ({
+      const data = (res.data || []).map((r:any) => ({
         _id: r._id,
         wasteType: r.waste_type,
         quantity: r.quantity,
