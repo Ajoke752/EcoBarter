@@ -6,7 +6,10 @@ export const calculateRewards = async (req, res) => {
   try {
     const { farmerId } = req.params;
 
-    const reports = await WasteReport.find({ farmerId, status: "completed" });
+    const reports = await WasteReport.find({
+      farmer_id: farmerId,
+      status: "completed",
+    });
     const totalQuantity = reports.reduce((sum, r) => sum + r.quantity, 0);
 
     const points = totalQuantity * 5; // Example: 5 points per item
@@ -20,15 +23,12 @@ export const calculateRewards = async (req, res) => {
 // 🏆 Redeem rewards
 export const redeemReward = async (req, res) => {
   try {
-    const { farmerId, points } = req.body;
-
+    const { farmerId, points } = req.body; // Assuming farmerId is passed in body
     if (!farmerId || !points)
       return res.status(400).json({ message: "Missing fields" });
 
-    const reward = await Reward.create({
-      farmerId,
-      points,
-      redeemedAt: new Date(),
+    const rewards = await Reward.find({ farmer_id: farmerId }).sort({
+      redeemedAt: -1,
     });
 
     res.status(201).json({ message: "Reward redeemed successfully", reward });

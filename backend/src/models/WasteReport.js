@@ -7,7 +7,12 @@ const wasteReportSchema = new mongoose.Schema({
   quantity: { type: Number, required: true },
   description: String,
   location: String,
-  status: { type: String, default: "pending" },
+  status: {
+     type: String,
+     enum: ["pending", "in_progress", "completed", "cancelled"],
+     default: "pending",
+   },
+   agent_id: { type: String },
   created_at: { type: Date, default: Date.now },
 });
 

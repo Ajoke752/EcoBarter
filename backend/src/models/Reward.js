@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const rewardSchema = new mongoose.Schema({
-  farmerId: String,
+  farmer_id: String,
   treeSeedlings: Number,
   compostCredits: Number,
 });

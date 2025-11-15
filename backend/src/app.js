@@ -7,6 +7,7 @@ import connectDB from "./config/db.js";
 import farmerRoutes from "./routes/farmerRoutes.js";
 import rewardsRoutes from "./routes/rewardsRoutes.js";
 import wasteReports from "./routes/wasteReports.js";
+import collectionRoutes from "./routes/collectionRoutes.js"; // Import new route
 import authRoutes from "./routes/authRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -43,6 +44,7 @@ app.use("/api/waste-reports", wasteReports);
 app.use("/api/farmers", farmerRoutes);
 app.use("/api/rewards", rewardsRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/collections", collectionRoutes); // Add new route
 
 app.get("/", (req, res) => res.send("🌿 EcoBarter API is live!"));
 
