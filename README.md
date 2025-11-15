@@ -206,16 +206,4 @@ If you'd like to contribute:
 2. Create a feature branch
 3. Open a PR with a clear description and tests if applicable
 
-## License
 
-This project doesn't have a license file in the repo. Add `LICENSE` if you plan to open source it.
-
----
-
-If you'd like, I can also:
-
-- Add `backend/.env.example` and `frontend/.env.example` files.
-- Replace all hardcoded `http://localhost:5000` calls in the frontend with the axios wrapper that reads `VITE_API_BASE`.
-- Add troubleshooting steps specific to any error you still observe.
-
-If you want any of those follow-ups implemented, tell me which and I'll add them next.
