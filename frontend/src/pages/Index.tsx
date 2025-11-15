@@ -45,6 +45,7 @@ const Index = () => {
             <Button 
               size="lg" 
               variant="secondary"
+              onClick={() => navigate("/learn-more")}
               className="text-lg px-8 py-6 rounded-xl"
             >
               Learn More
