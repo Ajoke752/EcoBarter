@@ -46,7 +46,8 @@ const CollectionRequestsList: React.FC<CollectionRequestsListProps> = ({
 
   const fetchRequests = async () => {
     try {
-      const res = await api.get("/waste/pending");
+      // FIX: Changed from /waste/pending to /collections/pending
+      const res = await api.get("/collections/pending");
       setRequests(res.data || []);
     } catch {
       toast({
@@ -62,7 +63,8 @@ const CollectionRequestsList: React.FC<CollectionRequestsListProps> = ({
   const handleStartCollection = async (reportId: string) => {
     setProcessingId(reportId);
     try {
-      await api.post(`/waste/start/${reportId}`);
+      // FIX: Changed from /waste/start to /collections/start
+      await api.post(`/collections/start/${reportId}`);
       toast({
         title: "Collection Started",
         description: "The collection has been marked as in progress.",
@@ -86,6 +88,7 @@ const CollectionRequestsList: React.FC<CollectionRequestsListProps> = ({
   const handleCompleteCollection = async (report: WasteReport) => {
     setProcessingId(report._id);
     try {
+      // This route was already correct, no change needed
       const res = await api.post(`/collections/complete/${report._id}`, {
         agentId,
       });
@@ -150,7 +153,8 @@ const CollectionRequestsList: React.FC<CollectionRequestsListProps> = ({
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h4 className="font-semibold text-foreground">
-                        {request.wasteType}
+                        {/* FIX: Use wasteType from the mapped response */}
+                        {request.wasteType.replace(/_/g, " ")}
                       </h4>
                       <Badge className="bg-accent text-accent-foreground">
                         {request.quantity} items
@@ -160,7 +164,9 @@ const CollectionRequestsList: React.FC<CollectionRequestsListProps> = ({
                       <p className="font-medium">
                         Farmer: {request.farmer.fullName}
                       </p>
-                      {request.farmer.phone && <p>Phone: {request.farmer.phone}</p>}
+                      {request.farmer.phone && (
+                        <p>Phone: {request.farmer.phone}</p>
+                      )}
                       {request.location && <p>Location: {request.location}</p>}
                       <p>
                         Reported{" "}

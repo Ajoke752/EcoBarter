@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import api from "@/lib/api";
 import {
   Card,
@@ -17,6 +16,17 @@ interface WasteHistoryListProps {
   userId: string;
 }
 
+// Interface for the backend response (snake_case)
+interface BackendWasteReport {
+  _id: string;
+  waste_type: string;
+  quantity: number;
+  status: string;
+  location?: string;
+  created_at: string;
+}
+
+// Interface for the frontend component state (camelCase)
 interface WasteReport {
   _id: string;
   wasteType: string;
@@ -33,13 +43,18 @@ const WasteHistoryList = ({ userId }: WasteHistoryListProps) => {
 
   useEffect(() => {
     if (userId) fetchReports();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const fetchReports = async () => {
     try {
-      // use the correct plural 'farmers' path and normalize snake_case -> camelCase
-      const res = await api.get(`/farmers/waste-reports/${userId}`);
-      const data = (res.data || []).map((r:any) => ({
+      // Typed API call expecting an array of BackendWasteReport
+      const res = await api.get<BackendWasteReport[]>(
+        `/farmers/waste-reports/${userId}`
+      );
+
+      // Map backend data to frontend interface
+      const data: WasteReport[] = (res.data || []).map((r) => ({
         _id: r._id,
         wasteType: r.waste_type,
         quantity: r.quantity,
@@ -47,6 +62,7 @@ const WasteHistoryList = ({ userId }: WasteHistoryListProps) => {
         location: r.location,
         createdAt: r.created_at,
       }));
+
       setReports(data);
     } catch (error) {
       console.error(error);

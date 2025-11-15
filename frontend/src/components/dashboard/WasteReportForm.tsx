@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import { useState } from "react";
-=======
-import { useState, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
->>>>>>> e24463283d72ca426a3821db47bc446b006c839e
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,13 +18,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-<<<<<<< HEAD
 import { Mic, Send, Loader2 } from "lucide-react";
 import api from "@/lib/api";
-=======
-import { Mic, Send, Loader2, MicOff } from "lucide-react";
-import { AudioRecorder, blobToBase64 } from "@/utils/audioRecorder";
->>>>>>> e24463283d72ca426a3821db47bc446b006c839e
+// REMOVED: Supabase and AudioRecorder imports
 
 interface WasteReportFormProps {
   userId: string;
@@ -51,9 +42,9 @@ const WasteReportForm = ({ userId, onReportCreated }: WasteReportFormProps) => {
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  // REMOVED: isRecording state
   const { toast } = useToast();
-  const recorderRef = useRef<AudioRecorder | null>(null);
+  // REMOVED: recorderRef
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,82 +98,12 @@ const WasteReportForm = ({ userId, onReportCreated }: WasteReportFormProps) => {
     }
   };
 
-<<<<<<< HEAD
+  // REVERTED to placeholder function to remove Supabase dependency
   const handleVoiceRecord = () => {
-    setIsRecording(!isRecording);
     toast({
       title: "Coming Soon 🎙️",
       description: "Voice recording will be available in future updates.",
     });
-=======
-  const handleVoiceRecord = async () => {
-    if (isRecording) {
-      // Stop recording and transcribe
-      try {
-        if (!recorderRef.current) return;
-        
-        setLoading(true);
-        const audioBlob = await recorderRef.current.stop();
-        const base64Audio = await blobToBase64(audioBlob);
-
-        toast({
-          title: "Transcribing...",
-          description: "Converting your voice to text...",
-        });
-
-        // Send to edge function for transcription
-        const { data, error } = await supabase.functions.invoke('transcribe-audio', {
-          body: { audio: base64Audio }
-        });
-
-        if (error) {
-          const errorMessage = data?.error?.includes('quota') || data?.error?.includes('insufficient_quota')
-            ? "OpenAI API credits exhausted. Please update your API key with one that has credits."
-            : data?.error || "Failed to transcribe audio. Please try again.";
-          
-          throw new Error(errorMessage);
-        }
-
-        if (data?.text) {
-          setDescription(data.text);
-          toast({
-            title: "Success!",
-            description: "Your voice has been transcribed to the description field.",
-          });
-        }
-
-        setIsRecording(false);
-      } catch (error: any) {
-        console.error('Voice recording error:', error);
-        toast({
-          title: "Error",
-          description: error.message || "Failed to process voice recording",
-          variant: "destructive",
-        });
-        setIsRecording(false);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      // Start recording
-      try {
-        recorderRef.current = new AudioRecorder();
-        await recorderRef.current.start();
-        setIsRecording(true);
-        toast({
-          title: "Recording...",
-          description: "Speak clearly about your waste. Click the button again to stop.",
-        });
-      } catch (error: any) {
-        console.error('Start recording error:', error);
-        toast({
-          title: "Error",
-          description: error.message || "Failed to start recording. Please check microphone permissions.",
-          variant: "destructive",
-        });
-      }
-    }
->>>>>>> e24463283d72ca426a3821db47bc446b006c839e
   };
 
   return (
@@ -192,20 +113,15 @@ const WasteReportForm = ({ userId, onReportCreated }: WasteReportFormProps) => {
           <span>Report Waste Collection</span>
           <Button
             type="button"
-            variant={isRecording ? "destructive" : "secondary"}
+            variant="secondary" // Reverted
             size="sm"
             onClick={handleVoiceRecord}
             className="gap-2"
-            disabled={loading}
+            // The loading state of the main form should not disable this button
+            // disabled={loading} // Removed
           >
-            {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : isRecording ? (
-              <MicOff className="w-4 h-4" />
-            ) : (
-              <Mic className="w-4 h-4" />
-            )}
-            {isRecording ? "Stop Recording" : "Voice Report"}
+            <Mic className="w-4 h-4" /> {/* Reverted to simple icon */}
+            Voice Report {/* Reverted to simple text */}
           </Button>
         </CardTitle>
         <CardDescription>
@@ -271,8 +187,11 @@ const WasteReportForm = ({ userId, onReportCreated }: WasteReportFormProps) => {
           <Button
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 text-white font-medium"
-            disabled={loading}
+            disabled={loading} // This loading flag is for the form submission
           >
+            {/* This loading spinner is only for the form submission.
+              The voice button's loading state was separate and has been removed.
+            */}
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             <Send className="mr-2 w-4 h-4" />
             Submit Report

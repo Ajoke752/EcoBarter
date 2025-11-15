@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/api";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Package, CheckCircle2, TrendingUp } from "lucide-react";
 import CollectionRequestsList from "@/components/dashboard/CollectionRequestsList";
 
@@ -23,7 +29,8 @@ const AgentDashboard: React.FC<AgentDashboardProps> = ({ userId }) => {
 
   const fetchStats = async () => {
     try {
-      const pendingRes = await api.get("/waste/pending");
+      // FIX: Changed from /waste/pending to /collections/pending
+      const pendingRes = await api.get("/collections/pending");
       const completedRes = await api.get(`/collections/agent/${userId}`);
 
       const completed = completedRes.data || [];
